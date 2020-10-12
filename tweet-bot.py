@@ -40,8 +40,10 @@ last_seen_id = str(read_last_seen(FILE_NAME))
 
 
 def tweet_replies():
-    tweets =api.mentions_timeline(since_id=last_seen_id)
+    tweets =api.mentions_timeline(since_id=last_seen_id, count=4)
     # print(tweets)
+    #remove duplicates
+    tweetsIds = []
     if tweets:
         for tweet in reversed(tweets):
             tweet1 = "@" +tweet.user.screen_name + " #EndSarsNow #ReformPoliceNG #SARSMUSTEND #ReformPoliceNG #SARSMUSTEND #ReformPoliceNG  #SARSMUSTEND  #SARSMUSTEND  #SARSMUSTEND #SARSMUSTEND #SARSMUSTEND #SARSMUSTEND #SARSMUSTEND #SARSMUSTEND #SARSMUSTEND #SARSMUSTEND #SARSMUSTEND #EndSars"
@@ -54,11 +56,17 @@ def tweet_replies():
             try:
                 api.update_status(final_tweet, tweet.id)
                 api.create_favorite(tweet.id)
+            
+
+
                 store_last_seen(FILE_NAME, tweet.id)
 
-            except Exception:
-                print("an error occured")
+            except Exception as e:
+                if e.api_code == 187:
+                    time.sleep(20)
+                print("an error occured", e)
     else:
         print('No New Tweets')
 
 tweet_replies()
+time.sleep(20)
