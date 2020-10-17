@@ -64,6 +64,9 @@ def tweet_replies():
             except Exception as e:
                 if e.api_code == 187:
                     time.sleep(20)
+                elif e.api_code == 186:
+                    time.sleep(20)
+                time.sleep(20)
                 print("an error occured", e)
     else:
         print('No New Tweets')
